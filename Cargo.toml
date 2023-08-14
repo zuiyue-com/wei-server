@@ -2,7 +2,12 @@
 name = "wei-server"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "wei api 接口"
+documentation = "https://github.com/zuiyue-com/wei-server"
+homepage = "https://github.com/zuiyue-com/wei-server"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
+wei-env = "0.2.3"
+axum = "0.6.20"
+tokio = { version = "1", features = ["full"] }
