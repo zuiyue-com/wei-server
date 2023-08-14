@@ -2,7 +2,7 @@
 name = "wei-server"
 version = "0.1.0"
 edition = "2021"
-description = "wei api 接口"
+description = "wei api"
 documentation = "https://github.com/zuiyue-com/wei-server"
 homepage = "https://github.com/zuiyue-com/wei-server"
 license = "MIT OR Apache-2.0"
