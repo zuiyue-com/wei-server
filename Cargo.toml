@@ -8,6 +8,7 @@ homepage = "https://github.com/zuiyue-com/wei-server"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-wei-env = "0.2.3"
+wei-env = "0.2.10"
+single-instance = "0.3"
 axum = "0.6.20"
 tokio = { version = "1", features = ["full"] }
