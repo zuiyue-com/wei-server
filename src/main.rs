@@ -26,7 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // axum 启动之后，不阻塞进程
     let handle = tokio::spawn(async move {
         // 构建我们的路由表
-        let app = Router::new().route("/", get(|| async { "Hello, axum!" }));
+        let app = Router::new().route("/", get(|| async { "wei-server" }));
 
         // 绑定port端口
         let address = format!("127.0.0.1:{}", port);
