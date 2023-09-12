@@ -3,3 +3,4 @@
 pub mod index;
 pub mod image;
 pub mod model;
+pub mod user;
