@@ -1,6 +1,8 @@
 use axum::Router;
 use axum::routing::get;
 
+mod routes;
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     wei_env::bin_init("wei-server");
@@ -26,7 +28,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // axum 启动之后，不阻塞进程
     let handle = tokio::spawn(async move {
         // 构建我们的路由表
-        let app = Router::new().route("/", get(|| async { "wei-server" }));
+        let app = Router::new()
+            .route("/index", get(routes::index::index))
+            .route("/image", get(routes::image::index))
+            .route("/model", get(routes::model::index))
+            .route("/", get(|| async { "wei-server" }));
 
         // 绑定port端口
         let address = format!("127.0.0.1:{}", port);
@@ -49,10 +55,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 }
 
-use std::net::TcpListener;
-
 fn is_port_available(port: u16) -> bool {
-    match TcpListener::bind(("127.0.0.1", port)) {
+    match std::net::TcpListener::bind(("127.0.0.1", port)) {
         Ok(_) => true,
         Err(_) => false,
     }
