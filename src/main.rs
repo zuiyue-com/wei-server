@@ -1,5 +1,6 @@
 use axum::Router;
 use axum::routing::get;
+use tower_http::cors::{Any};
 
 mod routes;
 
@@ -32,7 +33,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .route("/index", get(routes::index::index))
             .route("/image", get(routes::image::index))
             .route("/model", get(routes::model::index))
-            .route("/", get(|| async { "wei-server" }));
+            .route("/", get(|| async { "wei-server" }))
+            .layer(
+                tower_http::cors::CorsLayer::new()
+                  .allow_origin("*".parse::<axum::http::HeaderValue>().unwrap())
+                  .allow_headers(Any)
+                  .allow_methods(Any),
+              );
+
+
 
         // 绑定port端口
         let address = format!("127.0.0.1:{}", port);

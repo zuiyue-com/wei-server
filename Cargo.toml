@@ -12,3 +12,4 @@ wei-env = "0.2.10"
 single-instance = "0.3"
 axum = "0.6.20"
 tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.4.4", features = ["cors"] } 
