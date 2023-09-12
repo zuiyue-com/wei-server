@@ -1,7 +1,3 @@
-use axum::Router;
-use axum::routing::get;
-use tower_http::cors::{Any};
-
 mod routes;
 
 #[tokio::main]
@@ -19,7 +15,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         port += 1;
     }
 
-    // 把端口使用 serde_toml 写入数据到 .wei/server.dat
     let file_server = wei_env::home_dir()? + "server.dat";
     let mut server = std::fs::File::create(file_server)?;
     let data = format!("{}", port);
@@ -29,19 +24,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // axum 启动之后，不阻塞进程
     let handle = tokio::spawn(async move {
         // 构建我们的路由表
-        let app = Router::new()
-            .route("/index", get(routes::index::index))
-            .route("/image", get(routes::image::index))
-            .route("/model", get(routes::model::index))
-            .route("/", get(|| async { "wei-server" }))
-            .layer(
-                tower_http::cors::CorsLayer::new()
-                  .allow_origin("*".parse::<axum::http::HeaderValue>().unwrap())
-                  .allow_headers(Any)
-                  .allow_methods(Any),
-              );
-
-
+        let app = routes::routes();
 
         // 绑定port端口
         let address = format!("127.0.0.1:{}", port);
