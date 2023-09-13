@@ -5,6 +5,7 @@ pub async fn index() -> &'static str {
         "data": {
             "list": [
                 {
+                    "id": "1",
                     "uuid": "9e011f8e-975D-2A7b-BA0b-3390B78dcbED",
                     "image": "https://images.tusiassets.com/community/images/604726241320370765/1e934c23b64f9e98fa28cdd4f72be9d4.png",
                     "title": "绘世-启动器,SD-WebUI启动器",
@@ -23,5 +24,40 @@ pub async fn index() -> &'static str {
             ],
             "total": 1
         }
+    }"#
+}
+
+pub async fn download() ->  &'static str {
+    
+    let torrent = format!("http://download.zuiyue.com/windows/0.1.37.torrent");
+
+    // 使用qbittorrent下载数据
+    let path = std::env::current_dir().unwrap().join("test");
+    if !path.exists() {
+        std::fs::create_dir_all(&path).unwrap();
+    }
+    
+    let data = wei_run::run(
+        "wei-qbittorrent", 
+        vec![
+            "add".to_owned(),
+            torrent,
+            path.display().to_string()
+        ]
+    ).unwrap();
+
+    let v: serde_json::Value = serde_json::from_str(&data).unwrap();
+    if v["code"].as_str() != Some("200") {
+        return r#"{
+            "code": 400,
+            "msg": "failed",
+            "data": "下载器没有启动，或者其它问题导致失败"
+        }"#;
+    }
+
+    r#"{
+        "code": 200,
+        "msg": "success",
+        "data": "绘世-启动器"
     }"#
 }

@@ -11,6 +11,9 @@ pub mod user;
 pub fn routes() -> Router {
     Router::new()
         .route("/index", get(index::index))
+        .route("/index/download", get(index::download))
+        .route("/user", get(user::manage))
+        .route("/user/manage", get(user::manage))
         .route("/image", get(image::index))
         .route("/model", get(model::index))
         .route("/", get(|| async { "wei-server" }))
