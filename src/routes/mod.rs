@@ -1,6 +1,6 @@
 // 暴露index.rs的index函数
 use axum::Router;
-use axum::routing::get;
+use axum::routing::{get,post};
 use tower_http::cors::{Any};
 
 pub mod index;
@@ -15,6 +15,7 @@ pub fn routes() -> Router {
         .route("/user", get(user::manage))
         .route("/user/manage", get(user::manage))
         .route("/image", get(image::index))
+        .route("/image/delete/:hash", get(image::delete))
         .route("/model", get(model::index))
         .route("/", get(|| async { "wei-server" }))
         .layer(
