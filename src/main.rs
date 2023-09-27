@@ -1,6 +1,7 @@
 mod routes;
 
-pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
+#[tokio::main]
+pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut port = 1115;
 
     // 循环查找可用端口

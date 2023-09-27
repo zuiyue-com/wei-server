@@ -1,6 +1,6 @@
 [package]
 name = "wei-server"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "wei api"
 documentation = "https://github.com/zuiyue-com/wei-server"
