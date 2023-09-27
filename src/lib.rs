@@ -1,13 +1,6 @@
 mod routes;
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    wei_env::bin_init("wei-server");
-    let instance = single_instance::SingleInstance::new("wei-server")?;
-    if !instance.is_single() { 
-        std::process::exit(1);
-    };
-
+pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
     let mut port = 1115;
 
     // 循环查找可用端口
