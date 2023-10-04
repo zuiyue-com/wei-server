@@ -40,9 +40,9 @@ pub async fn download() ->  &'static str {
     let data = wei_run::run(
         "wei-qbittorrent", 
         vec![
-            "add".to_owned(),
-            torrent,
-            path.display().to_string()
+            "add",
+            torrent.as_str(),
+            path.display().to_string().as_str()
         ]
     ).unwrap();
 

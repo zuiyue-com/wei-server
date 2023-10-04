@@ -2,7 +2,7 @@ pub async fn index() -> String {
     wei_run::run(
         "wei-qbittorrent", 
         vec![
-            "list".to_owned()
+            "list"
         ]
     ).unwrap()
 }
@@ -13,8 +13,8 @@ pub async fn delete(Path(hash): Path<String>) -> String {
     wei_run::run(
         "wei-qbittorrent", 
         vec![
-            "delete".to_owned(),
-            hash
+            "delete",
+            &hash
         ]
     ).unwrap()
 }
