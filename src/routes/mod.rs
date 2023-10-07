@@ -3,6 +3,7 @@ use axum::Router;
 use axum::routing::{get,post};
 use tower_http::cors::{Any};
 
+pub mod run;
 pub mod index;
 pub mod image;
 pub mod model;
@@ -10,6 +11,7 @@ pub mod user;
 
 pub fn routes() -> Router {
     Router::new()
+        .route("/run", post(run::index))
         .route("/index", get(index::index))
         .route("/index/download", get(index::download))
         .route("/user", get(user::manage))

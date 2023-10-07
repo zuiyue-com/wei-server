@@ -1,6 +1,6 @@
 mod routes;
 
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread", worker_threads = 2)]
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     wei_env::bin_init("wei-server");
     use single_instance::SingleInstance;
@@ -23,28 +23,28 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     server.write_all(&data.into_bytes())?;
 
     // axum 启动之后，不阻塞进程
-    let handle = tokio::spawn(async move {
-        // 构建我们的路由表
-        let app = routes::routes();
+    // let handle = tokio::spawn(async move {
+    // 构建我们的路由表
+    let app = routes::routes();
 
-        // 绑定port端口
-        let address = format!("127.0.0.1:{}", port);
-        println!("Server running on {}", address);
-        axum::Server::bind(&address.parse().unwrap())
-            .serve(app.into_make_service())
-            .await
-            .unwrap();
-    });
+    // 绑定port端口
+    let address = format!("127.0.0.1:{}", port);
+    println!("Server running on {}", address);
+    axum::Server::bind(&address.parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+    // });
 
-    loop {
-        if wei_env::status() == "0" {
-            // 当程序接受到退出信号时，关闭 axum 服务
-            handle.abort();
-            return Ok(());
-        }
+    // loop {
+    //     if wei_env::status() == "0" {
+    //         // 当程序接受到退出信号时，关闭 axum 服务
+    //         // handle.abort();
+    //         return Ok(());
+    //     }
 
-        tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
-    }
+    //     tokio::time::sleep(tokio::time::Duration::from_secs(15)).await;
+    // }
 
 }
 
