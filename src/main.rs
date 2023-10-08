@@ -46,6 +46,8 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     tokio::time::sleep(tokio::time::Duration::from_secs(15)).await;
     // }
 
+    Ok(())
+
 }
 
 fn is_port_available(port: u16) -> bool {
