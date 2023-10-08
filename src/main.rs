@@ -36,16 +36,6 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .unwrap();
     });
 
-    loop {
-        if wei_env::status() == "0" {
-            // 当程序接受到退出信号时，关闭 axum 服务
-            handle.abort();
-            return Ok(());
-        }
-
-        tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
-    }
-
 }
 
 fn is_port_available(port: u16) -> bool {
