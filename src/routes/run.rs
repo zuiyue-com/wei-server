@@ -11,42 +11,24 @@ pub async fn index(Json(data): Json<Vec<String>>) -> String {
         return data.to_string();
     }
 
-    // use tokio::time::{timeout, Duration};
-
-    // let result = timeout(Duration::from_secs(5), run_task(command)).await.unwrap();
-
-    // match result {
-    //     Ok(value) => value,
-    //     Err(_) => {
-    //         let data = format!("{}", serde_json::json!({
-    //             "code": "400",
-    //             "msg": format!("任务超时")
-    //         }));
-    //         data
-    //     }
-    // }
-
-    use async_process::{Command, Child};
+    use async_process::{Command, Child, Stdio};
     use tokio::time::{timeout, Duration};
+
+    let command_path = "./".to_owned() + command[0];
     
-    let mut child: Child = Command::new(command[0])
+    let mut child: Child = Command::new(command_path)
         .args(command[1..].to_vec())
+        .stdout(Stdio::piped())
         .spawn().unwrap();
 
-    let duration = Duration::from_secs(5);
+    let duration = Duration::from_secs(60);
 
     match timeout(duration, child.status()).await {
         Ok(result) => match result {
             Ok(_) => {
                 let data = child.output().await.unwrap();
-                println!("here:{:?}", data);
                 let data = String::from_utf8_lossy(&data.stdout).into_owned();
-                format!("{}", 
-                serde_json::json!({
-                    "code": "200",
-                    "msg": "success",
-                    "data": data
-                }))
+                data
             },
             Err(e) => {
                 format!("{}", 
