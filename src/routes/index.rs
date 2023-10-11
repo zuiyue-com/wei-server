@@ -1,7 +1,7 @@
 pub async fn index() -> &'static str {
     r#"{
         "code": 200,
-        "msg": "success",
+        "message": "成功",
         "data": {
             "list": [
                 {
@@ -47,17 +47,17 @@ pub async fn download() ->  &'static str {
     ).unwrap();
 
     let v: serde_json::Value = serde_json::from_str(&data).unwrap();
-    if v["code"].as_str() != Some("200") {
+    if v["code"] != 200 {
         return r#"{
             "code": 400,
-            "msg": "failed",
+            "message": "下载器没有启动，或者其它问题导致失败",
             "data": "下载器没有启动，或者其它问题导致失败"
         }"#;
     }
 
     r#"{
         "code": 200,
-        "msg": "success",
+        "message": "绘世-启动器",
         "data": "绘世-启动器"
     }"#
 }

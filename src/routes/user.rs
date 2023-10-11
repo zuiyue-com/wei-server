@@ -1,7 +1,7 @@
 pub async fn manage() -> &'static str {
     r#"{
         "code": 200,
-        "msg": "success",
+        "message": "success",
         "data": {
             "list": [
                 {

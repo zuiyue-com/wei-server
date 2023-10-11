@@ -5,8 +5,8 @@ pub async fn index(Json(data): Json<Vec<String>>) -> String {
     
     if command.len() < 1 {
         let data = format!("{}", serde_json::json!({
-            "code": "400",
-            "msg": "missing param error, at least one param required"
+            "code": 400,
+            "message": "missing param error, at least one param required"
         }));
         return data.to_string();
     }
@@ -33,8 +33,8 @@ pub async fn index(Json(data): Json<Vec<String>>) -> String {
             Err(e) => {
                 format!("{}", 
                 serde_json::json!({
-                    "code": "400",
-                    "msg": format!("任务执行失败: {}", e)
+                    "code": 400,
+                    "message": format!("任务执行失败: {}", e)
                 }))
             }
         },
@@ -45,8 +45,8 @@ pub async fn index(Json(data): Json<Vec<String>>) -> String {
 
             format!("{}", 
                 serde_json::json!({
-                    "code": "400",
-                    "msg": format!("任务超时")
+                    "code": 400,
+                    "message": format!("任务超时")
             }))
         }
     }
