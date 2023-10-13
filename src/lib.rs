@@ -1,7 +1,6 @@
 mod routes;
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 2)]
-pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
+pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
     wei_env::bin_init("wei-server");
     use single_instance::SingleInstance;
     let instance = SingleInstance::new("wei-server").unwrap();
