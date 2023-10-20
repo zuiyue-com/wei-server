@@ -1,3 +1,6 @@
+// #[macro_use]
+// extern crate wei_log;
+
 mod routes;
 
 pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
