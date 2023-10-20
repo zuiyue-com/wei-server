@@ -26,6 +26,7 @@ pub fn routes() -> Router {
         .route("/model", get(model::index))
         .route("/version", get(|| async { "wei-server" }))
         .route("/api/:rest", get(api_proxy))
+        .route("/api/:rest", post(api_proxy))
         .nest_service("/", tower_http::services::ServeDir::new("dist"))
         .layer(
             tower_http::cors::CorsLayer::new()
@@ -84,6 +85,7 @@ async fn api_proxy(
             return Ok(res);
         },
         Err(err) => {
+            info!("wei-server proxy: {}", err);
             Ok(hyper::Response::builder()
                 .status(500)
                 .body(hyper::Body::from("Internal server error"))
