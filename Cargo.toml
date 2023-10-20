@@ -8,7 +8,7 @@ homepage = "https://github.com/zuiyue-com/wei-server"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-wei-env = "0.2.10"
+wei-env = "0.2.13"
 wei-run = "0.2.4"
 wei-log = "0.2.8"
 serde = "1"

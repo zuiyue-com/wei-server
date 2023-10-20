@@ -14,7 +14,6 @@ pub fn routes() -> Router {
         target_uri: "https://www.zuiyue.com/discuz".parse().unwrap(),
     });
 
-
     Router::new()
         .route("/run", post(run::index))
         .route("/index", get(index::index))
