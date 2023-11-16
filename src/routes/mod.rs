@@ -2,11 +2,20 @@ use axum::Router;
 use axum::routing::{get, post};
 use tower_http::cors::{Any};
 
+use once_cell::sync::Lazy;
+use sled::Db;
+
 pub mod run;
 pub mod index;
 pub mod image;
 pub mod model;
 pub mod user;
+pub mod task;
+
+static DB_TASK: Lazy<Db> = Lazy::new(|| {
+    let db_path = format!("{}wei-task-db", wei_env::home_dir().unwrap());
+    sled::open(&db_path).unwrap()
+});
 
 pub fn routes() -> Router {
 
@@ -23,6 +32,9 @@ pub fn routes() -> Router {
         .route("/image", get(image::index))
         .route("/image/delete/:hash", get(image::delete))
         .route("/model", get(model::index))
+        .route("/task/list", post(task::list))
+        .route("/task/insert", post(task::insert))
+        .route("/task/delete", post(task::delete))
         .route("/version", get(|| async { "wei-server" }))
         .route("/api/:rest", get(api_proxy))
         .route("/api/:rest", post(api_proxy))

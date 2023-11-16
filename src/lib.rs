@@ -4,13 +4,6 @@ extern crate wei_log;
 mod routes;
 
 pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
-    wei_env::bin_init("wei-server");
-    use single_instance::SingleInstance;
-    let instance = SingleInstance::new("wei-server").unwrap();
-    if !instance.is_single() { 
-        std::process::exit(1);
-    };
-
     let mut port = 1115;
 
     // 循环查找可用端口
@@ -24,8 +17,6 @@ pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
     use std::io::Write;
     server.write_all(&data.into_bytes())?;
 
-    // axum 启动之后，不阻塞进程
-    // let handle = tokio::spawn(async move {
     // 构建我们的路由表
     let app = routes::routes();
 
@@ -36,17 +27,6 @@ pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
         .serve(app.into_make_service())
         .await
         .unwrap();
-    // });
-
-    // loop {
-    //     if wei_env::status() == "0" {
-    //         // 当程序接受到退出信号时，关闭 axum 服务
-    //         // handle.abort();
-    //         return Ok(());
-    //     }
-
-    //     tokio::time::sleep(tokio::time::Duration::from_secs(15)).await;
-    // }
 
     Ok(())
 
