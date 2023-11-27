@@ -51,3 +51,24 @@ pub async fn index(Json(data): Json<Vec<String>>) -> String {
         }
     }
 }
+
+pub async fn index_async(Json(data): Json<Vec<String>>) -> String {
+    let command: Vec<&str> = data.iter().map(|s| s.as_str()).collect();
+    
+    if command.len() < 1 {
+        let data = format!("{}", serde_json::json!({
+            "code": 400,
+            "message": "missing param error, at least one param required"
+        }));
+        return data.to_string();
+    }
+
+    wei_run::run_async(command[0], (&command[1..]).to_vec()).unwrap();
+
+    format!("{}", 
+        serde_json::json!({
+            "code": 200,
+            "message": "success"
+    }))
+}
+

@@ -25,6 +25,7 @@ pub fn routes() -> Router {
 
     Router::new()
         .route("/run", post(run::index))
+        .route("/run/async", post(run::index_async))
         .route("/index", get(index::index))
         .route("/index/download", get(index::download))
         .route("/user", get(user::manage))

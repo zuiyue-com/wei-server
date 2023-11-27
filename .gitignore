@@ -1,6 +1,7 @@
 /target
 /test
 /Cargo.lock
+/*.exe
 
 # Added by cargo
 #
