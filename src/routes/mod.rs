@@ -18,9 +18,11 @@ static DB_TASK: Lazy<Db> = Lazy::new(|| {
 });
 
 pub fn routes() -> Router {
-
     let proxy_target = std::sync::Arc::new(ProxyTarget {
-        target_uri: "https://www.zuiyue.com/discuz".parse().unwrap(),
+        target_uri: match std::fs::read_to_string("server.dat") {
+            Ok(content) => content.trim().parse().unwrap(),
+            Err(_) => "https://www.zuiyue.com".parse().unwrap(),
+        },
     });
 
     Router::new()
