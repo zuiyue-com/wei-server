@@ -70,10 +70,21 @@ async fn api_proxy(
         None => "",
     };
 
-    let path_and_query = path_and_query.replacen("/api/", "/", 1);
+    let path_and_query = path_and_query.replacen("/api/", "", 1);
  
     let uri = format!("{}{}", proxy_target.target_uri, path_and_query).parse::<hyper::Uri>().unwrap();
+    info!("wei-server proxy: {}", uri);
     *req.uri_mut() = uri;
+
+    let host = proxy_target.target_uri.host().unwrap().to_string();
+    let uri = proxy_target.target_uri.to_string();
+    let headers = req.headers_mut();
+
+    // 设置或修改 Host 和 Referer 头部
+    use hyper::header::HeaderValue;
+    headers.insert("Host", HeaderValue::from_str(&host).unwrap());
+    headers.insert("Referer", HeaderValue::from_str(&uri).unwrap());
+    
 
     // Forward the request to the target URI
     match client.request(req).await {
@@ -89,13 +100,14 @@ async fn api_proxy(
                 body_bytes = hyper::body::Bytes::from(decoded_body);
             }
             
-            let body = hyper::Body::from(body_bytes);
+            let body = hyper::Body::from(body_bytes.clone());
 
             let res = hyper::Response::builder()
                 .status(res.status())
                 .body(body)
                 .unwrap();
             
+            info!("body: {:?}", body_bytes);
             return Ok(res);
         },
         Err(err) => {

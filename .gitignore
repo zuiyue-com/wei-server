@@ -2,6 +2,8 @@
 /test
 /Cargo.lock
 /*.exe
+/dist
+/server.dat
 
 # Added by cargo
 #
