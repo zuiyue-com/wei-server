@@ -74,16 +74,16 @@ async fn api_proxy(
  
     let uri = format!("{}{}", proxy_target.target_uri, path_and_query).parse::<hyper::Uri>().unwrap();
     
-    *req.uri_mut() = uri;
+    *req.uri_mut() = uri.clone();
 
     let host = proxy_target.target_uri.host().unwrap().to_string();
-    let uri = proxy_target.target_uri.to_string();
+    let url = proxy_target.target_uri.to_string();
     let headers = req.headers_mut();
 
     // 设置或修改 Host 和 Referer 头部
     use hyper::header::HeaderValue;
     headers.insert("Host", HeaderValue::from_str(&host).unwrap());
-    headers.insert("Referer", HeaderValue::from_str(&uri).unwrap());
+    headers.insert("Referer", HeaderValue::from_str(&url).unwrap());
     
     // Forward the request to the target URI
     match client.request(req).await {
@@ -107,7 +107,7 @@ async fn api_proxy(
                 .unwrap();
             
             info!("uri: {}", uri);
-            info!("body: {:?}", body_bytes[0..100].to_vec());
+            info!("body: {:?}", &body_bytes[0..300.min(body_bytes.len())]);
             return Ok(res);
         },
         Err(err) => {
