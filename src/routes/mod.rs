@@ -73,7 +73,7 @@ async fn api_proxy(
     let path_and_query = path_and_query.replacen("/api/", "", 1);
  
     let uri = format!("{}{}", proxy_target.target_uri, path_and_query).parse::<hyper::Uri>().unwrap();
-    info!("wei-server proxy: {}", uri);
+    
     *req.uri_mut() = uri;
 
     let host = proxy_target.target_uri.host().unwrap().to_string();
@@ -85,7 +85,6 @@ async fn api_proxy(
     headers.insert("Host", HeaderValue::from_str(&host).unwrap());
     headers.insert("Referer", HeaderValue::from_str(&uri).unwrap());
     
-
     // Forward the request to the target URI
     match client.request(req).await {
         Ok(mut res) => {
@@ -107,7 +106,8 @@ async fn api_proxy(
                 .body(body)
                 .unwrap();
             
-            info!("body: {:?}", body_bytes);
+            info!("uri: {}", uri);
+            info!("body: {:?}", body_bytes[0..100].to_vec());
             return Ok(res);
         },
         Err(err) => {
