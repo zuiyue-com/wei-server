@@ -8,9 +8,8 @@ use sled::Db;
 pub mod run;
 pub mod index;
 pub mod image;
-pub mod model;
-pub mod user;
 pub mod task;
+pub mod setting;
 
 static DB_TASK: Lazy<Db> = Lazy::new(|| {
     let db_path = format!("{}wei-task-db", wei_env::home_dir().unwrap());
@@ -28,16 +27,19 @@ pub fn routes() -> Router {
     Router::new()
         .route("/run", post(run::index))
         .route("/run/async", post(run::index_async))
-        .route("/index", get(index::index))
+
+        .route("/setting/autorun", get(setting::autorun))
+        .route("/setting/unautorun", get(setting::unautorun))
+
         .route("/index/download", get(index::download))
-        .route("/user", get(user::manage))
-        .route("/user/manage", get(user::manage))
+
         .route("/image", get(image::index))
         .route("/image/delete/:hash", get(image::delete))
-        .route("/model", get(model::index))
+
         .route("/task/list", post(task::list))
         .route("/task/insert", post(task::insert))
         .route("/task/delete", post(task::delete))
+
         .route("/version", get(|| async { "wei-server" }))
         .route("/api/*rest", get(api_proxy))
         .route("/api/*rest", post(api_proxy))
