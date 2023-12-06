@@ -111,18 +111,18 @@ async fn api_proxy(
                 .unwrap();
             
             let body = std::str::from_utf8(&body_bytes).unwrap();
-            info!("wei-server uri: {}, body: {}", uri, &body[0..300.min(body.len())]);
+            // info!("wei-server uri: {}, body: {}", uri, &body[0..300.min(body.len())]);
             return Ok(res);
         },
         Ok(Err(err)) => {
-            info!("wei-server uri: {}, err: {}", uri, err);
+            // info!("wei-server uri: {}, err: {}", uri, err);
             Ok(hyper::Response::builder()
                 .status(500)
                 .body(hyper::Body::from("Internal server error"))
                 .unwrap())
         }
         Err(_) => {
-            info!("wei-server uri: {}, timeout", uri);
+            // info!("wei-server uri: {}, timeout", uri);
             Ok(hyper::Response::builder()
                 .status(504)
                 .body(hyper::Body::from("Gateway Timeout"))
