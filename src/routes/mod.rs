@@ -39,8 +39,8 @@ pub fn routes() -> Router {
         .route("/task/insert", post(task::insert))
         .route("/task/delete", post(task::delete))
         .route("/version", get(|| async { "wei-server" }))
-        .route("/api/:rest", get(api_proxy))
-        .route("/api/:rest", post(api_proxy))
+        .route("/api/*rest", get(api_proxy))
+        .route("/api/*rest", post(api_proxy))
         .nest_service("/", tower_http::services::ServeDir::new("dist"))
         .layer(
             tower_http::cors::CorsLayer::new()
@@ -84,10 +84,12 @@ async fn api_proxy(
     use hyper::header::HeaderValue;
     headers.insert("Host", HeaderValue::from_str(&host).unwrap());
     headers.insert("Referer", HeaderValue::from_str(&url).unwrap());
+
+    let timeout_duration = tokio::time::Duration::from_secs(30);
     
     // Forward the request to the target URI
-    match client.request(req).await {
-        Ok(mut res) => {
+    match tokio::time::timeout(timeout_duration, client.request(req)).await {
+        Ok(Ok(mut res)) => {
             let mut body_bytes = hyper::body::to_bytes(res.body_mut()).await.unwrap();
 
             // Check if the response is gzipped
@@ -106,15 +108,22 @@ async fn api_proxy(
                 .body(body)
                 .unwrap();
             
-            info!("uri: {}", uri);
-            info!("body: {:?}", &body_bytes[0..300.min(body_bytes.len())]);
+            let body = std::str::from_utf8(&body_bytes).unwrap();
+            info!("wei-server uri: {}, body: {}", uri, &body[0..300.min(body.len())]);
             return Ok(res);
         },
-        Err(err) => {
-            info!("wei-server proxy: {}", err);
+        Ok(Err(err)) => {
+            info!("wei-server uri: {}, err: {}", uri, err);
             Ok(hyper::Response::builder()
                 .status(500)
                 .body(hyper::Body::from("Internal server error"))
+                .unwrap())
+        }
+        Err(_) => {
+            info!("wei-server uri: {}, timeout", uri);
+            Ok(hyper::Response::builder()
+                .status(504)
+                .body(hyper::Body::from("Gateway Timeout"))
                 .unwrap())
         }
     }
