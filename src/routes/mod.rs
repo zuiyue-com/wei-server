@@ -28,6 +28,8 @@ pub fn routes() -> Router {
         .route("/run", post(run::index))
         .route("/run/async", post(run::index_async))
 
+        .route("/setting/token_write_once", post(setting::token_write_once))
+        .route("/setting/token_write", post(setting::token_write))
         .route("/setting/autorun", get(setting::autorun))
         .route("/setting/unautorun", get(setting::unautorun))
 
@@ -110,11 +112,11 @@ async fn api_proxy(
                 .body(body)
                 .unwrap();
             
-            let body = std::str::from_utf8(&body_bytes).unwrap();
+            // let body = std::str::from_utf8(&body_bytes).unwrap();
             // info!("wei-server uri: {}, body: {}", uri, &body[0..300.min(body.len())]);
             return Ok(res);
         },
-        Ok(Err(err)) => {
+        Ok(Err(_)) => {
             // info!("wei-server uri: {}, err: {}", uri, err);
             Ok(hyper::Response::builder()
                 .status(500)

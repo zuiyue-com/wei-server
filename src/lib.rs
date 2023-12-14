@@ -1,5 +1,5 @@
-#[macro_use]
-extern crate wei_log;
+// #[macro_use]
+// extern crate wei_log;
 
 mod routes;
 

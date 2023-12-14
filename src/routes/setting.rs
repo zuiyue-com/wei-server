@@ -71,3 +71,91 @@ pub async fn unautorun() -> String {
         "message": "success"
     }))
 }
+
+use axum::Json;
+
+pub async fn token_write_once(Json(data): Json<Vec<String>>) -> String {
+    let command: Vec<&str> = data.iter().map(|s| s.as_str()).collect();
+    let data = command[0];
+
+    let token_path = format!("{}token.dat", wei_env::home_dir().unwrap());
+
+    // 如果文件存在，内容为空，则写入，
+    // 如果文件不存在，则创建并写入
+    // 如果文件存在，不为空，则不写入
+    if std::path::Path::new(&token_path).exists() {
+        let content = match std::fs::read_to_string(&token_path) {
+            Ok(content) => content,
+            Err(_) => {
+                return format!("{}", serde_json::json!({
+                    "code": 400,
+                    "message": "读取文件失败"
+                }))
+            }
+        };
+
+        if content.is_empty() {
+            match std::fs::write(&token_path, data) {
+                Ok(_) => (),
+                Err(_) => {
+                    return format!("{}", serde_json::json!({
+                        "code": 400,
+                        "message": "写入文件失败"
+                    }))
+                }
+            }
+        }
+    } else {
+        match std::fs::write(&token_path, data) {
+            Ok(_) => (),
+            Err(_) => {
+                return format!("{}", serde_json::json!({
+                    "code": 400,
+                    "message": "写入文件失败"
+                }))
+            }
+        }
+    }
+
+    format!("{}", serde_json::json!({
+        "code": 200,
+        "message": "success"
+    }))
+}
+
+
+pub async fn token_write(Json(data): Json<Vec<String>>) -> String {
+    let command: Vec<&str> = data.iter().map(|s| s.as_str()).collect();
+    let data = command[0];
+
+    let token_path = format!("{}token.dat", wei_env::home_dir().unwrap());
+
+    // 如果文件存在，则写入，
+    // 如果文件不存在，则创建并写入
+    if std::path::Path::new(&token_path).exists() {
+        match std::fs::write(&token_path, data) {
+            Ok(_) => (),
+            Err(_) => {
+                return format!("{}", serde_json::json!({
+                    "code": 400,
+                    "message": "写入文件失败"
+                }))
+            }
+        }
+    } else {
+        match std::fs::write(&token_path, data) {
+            Ok(_) => (),
+            Err(_) => {
+                return format!("{}", serde_json::json!({
+                    "code": 400,
+                    "message": "写入文件失败"
+                }))
+            }
+        }
+    }
+
+    format!("{}", serde_json::json!({
+        "code": 200,
+        "message": "success"
+    }))
+}
