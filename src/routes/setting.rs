@@ -159,3 +159,26 @@ pub async fn token_write(Json(data): Json<Vec<String>>) -> String {
         "message": "success"
     }))
 }
+
+pub async fn data_read(Json(data): Json<Vec<String>>) -> String {
+    let command: Vec<&str> = data.iter().map(|s| s.as_str()).collect();
+    let data = command[0];
+
+    let path = format!("{}{}.dat", wei_env::home_dir().unwrap(), data);
+    let data = match std::fs::read_to_string(&path) {
+        Ok(data) => data,
+        Err(_) => {
+            return format!("{}", serde_json::json!({
+                "code": 400,
+                "message": "读取文件失败"
+            }))
+        }
+    };
+
+    format!("{}", serde_json::json!({
+        "code": 200,
+        "message": "success",
+        "data": data
+    }))
+}
+
