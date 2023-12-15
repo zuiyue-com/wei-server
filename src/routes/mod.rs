@@ -33,6 +33,7 @@ pub fn routes() -> Router {
         .route("/setting/data_read", post(setting::data_read))
         .route("/setting/autorun", get(setting::autorun))
         .route("/setting/unautorun", get(setting::unautorun))
+        .route("/setting/shutdown", get(setting::shutdown))
 
         .route("/index/download", get(index::download))
 

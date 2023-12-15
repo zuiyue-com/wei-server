@@ -182,3 +182,33 @@ pub async fn data_read(Json(data): Json<Vec<String>>) -> String {
     }))
 }
 
+
+pub async fn reboot() -> String {
+    let data = match wei_run::command("shutdown", vec!["/r", "/t", "0"]) {
+        Ok(_) => format!("{}", serde_json::json!({
+                "code": 200,
+                "message": "success"
+            })),
+        Err(_) => format!("{}", serde_json::json!({
+                "code": 400,
+                "message": "重启失败"
+            }))
+    };
+
+    data
+}
+
+pub async fn shutdown() -> String {
+    let data = match wei_run::command("shutdown", vec!["/s", "/t", "0"]) {
+        Ok(_) => format!("{}", serde_json::json!({
+                "code": 200,
+                "message": "success"
+            })),
+        Err(_) => format!("{}", serde_json::json!({
+                "code": 400,
+                "message": "关机失败"
+            }))
+    };
+
+    data
+}
