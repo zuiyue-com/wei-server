@@ -34,6 +34,7 @@ pub fn routes() -> Router {
         .route("/setting/autorun", get(setting::autorun))
         .route("/setting/unautorun", get(setting::unautorun))
         .route("/setting/shutdown", get(setting::shutdown))
+        .route("/setting/reboot", get(setting::reboot))
 
         .route("/index/download", get(index::download))
 
