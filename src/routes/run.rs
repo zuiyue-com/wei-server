@@ -1,8 +1,5 @@
 use axum::Json;
 
-#[cfg(target_os = "windows")]
-use std::os::windows::process::CommandExt;
-
 pub async fn index(Json(data): Json<Vec<String>>) -> String {
     let command: Vec<&str> = data.iter().map(|s| s.as_str()).collect();
     
@@ -15,6 +12,8 @@ pub async fn index(Json(data): Json<Vec<String>>) -> String {
     }
 
     use async_process::{Command, Child, Stdio};
+    #[cfg(target_os = "windows")]
+    use async_process::windows::CommandExt;
     use tokio::time::{timeout, Duration};
 
     let command_path = "./".to_owned() + command[0];
