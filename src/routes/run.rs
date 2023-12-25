@@ -1,5 +1,8 @@
 use axum::Json;
 
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
 pub async fn index(Json(data): Json<Vec<String>>) -> String {
     let command: Vec<&str> = data.iter().map(|s| s.as_str()).collect();
     
@@ -16,6 +19,14 @@ pub async fn index(Json(data): Json<Vec<String>>) -> String {
 
     let command_path = "./".to_owned() + command[0];
     
+    #[cfg(target_os = "windows")]
+    let mut child: Child = Command::new(command_path)
+        .args(command[1..].to_vec())
+        .creation_flags(winapi::um::winbase::CREATE_NO_WINDOW)
+        .stdout(Stdio::piped())
+        .spawn().unwrap();
+
+    #[cfg(not(target_os = "windows"))]
     let mut child: Child = Command::new(command_path)
         .args(command[1..].to_vec())
         .stdout(Stdio::piped())
