@@ -1,10 +1,6 @@
-#[macro_use]
-extern crate wei_log;
-
-mod routes;
-
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread", worker_threads = 100)]
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    wei_windows::init();
     wei_env::bin_init("wei-server");
     use single_instance::SingleInstance;
     let instance = SingleInstance::new("wei-server").unwrap();
@@ -12,15 +8,7 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     };
 
-    let port = 1115;
-    let app = routes::routes();
-
-    let address = format!("127.0.0.1:{}", port);
-    println!("Server running on {}", address);
-    axum::Server::bind(&address.parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    wei_server::start().await?;
     
     Ok(())
 }
