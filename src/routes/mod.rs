@@ -38,8 +38,8 @@ pub fn routes() -> Router {
         .route("/setting/token_write_once", post(setting::token_write_once))
         .route("/setting/token_write", post(setting::token_write))
         .route("/setting/data_read", post(setting::data_read))
-        .route("/setting/autorun", get(setting::autorun))
-        .route("/setting/unautorun", get(setting::unautorun))
+        // .route("/setting/autorun", get(setting::autorun))
+        // .route("/setting/unautorun", get(setting::unautorun))
         .route("/setting/shutdown", get(setting::shutdown))
         .route("/setting/reboot", get(setting::reboot))
 
