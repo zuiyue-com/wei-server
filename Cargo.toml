@@ -11,11 +11,11 @@ license = "MIT OR Apache-2.0"
 wei-env = "0.2.13"
 wei-run = "0.3.1"
 wei-log = "0.2.10"
+wei-single = "0.3"
 wei-windows = { path = "../wei-windows"}
 
 serde = "1"
 serde_json = "1"
-single-instance = "0.3"
 axum = "0.6.20"
 tokio = { version = "1", features = ["full"] }
 tower-http = { version = "0.4.4", features = ["full"] } #"cors", "fs", "add_extension"
