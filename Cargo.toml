@@ -6,7 +6,6 @@ description = "wei api"
 documentation = "https://github.com/zuiyue-com/wei-server"
 homepage = "https://github.com/zuiyue-com/wei-server"
 license = "MIT OR Apache-2.0"
-build = "build.rs"
 
 [dependencies]
 wei-env = "0.2.13"
